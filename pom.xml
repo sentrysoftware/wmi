@@ -2,18 +2,18 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.sentrysoftware</groupId>
-	<artifactId>MYARTIFACT</artifactId>
-	<name>MY PROJECT</name>
-	<version>0.1.00-SNAPSHOT</version>
-	<description>SOME DESCRIPTION</description>
-  <packaging>jar</packaging>
+	<artifactId>wmi</artifactId>
+	<name>WMI Java Client</name>
+	<version>1.0.00-SNAPSHOT</version>
+	<description>WMI Client Library for Java</description>
+	<packaging>jar</packaging>
 
 	<organization>
 		<name>Sentry Software</name>
 		<url>https://sentrysoftware.com</url>
 	</organization>
 
-	<url>https://github.com/sentrysoftware/MYREPO</url>
+	<url>https://sentrysoftware.github.io/wmi</url>
 	<inceptionYear>2023</inceptionYear>
 
 	<distributionManagement>
@@ -37,30 +37,49 @@
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/sentrysoftware/MYREPO/issues/</url>
+		<url>https://github.com/sentrysoftware/wmi/issues/</url>
 	</issueManagement>
 
 	<scm>
-		<connection>scm:git:https://github.com/sentrysoftware/MYREPO.git</connection>
-		<url>https://github.com/sentrysoftware/MYREPO</url>
+		<connection>scm:git:https://github.com/sentrysoftware/wmi.git</connection>
+		<url>https://github.com/sentrysoftware/wmi</url>
 		<tag>HEAD</tag>
 	</scm>
 
 	<developers>
 		<developer>
-			<name>MY NAME (@MY_ID)</name>
-			<email>MYNAME@sentrysoftware.com</email>
+			<name>Bertrand Martin (@bertysentry)</name>
+			<email>bertrand@sentrysoftware.com</email>
 			<roles>
-				<role>Project founder</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Nassim BOUTEKEDJIRET (@NassimBtk)</name>
+			<email>nassim@sentrysoftware.com</email>
+			<roles>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Kawtar Bakour (@KawtarBK9)</name>
+			<email>kawtar@sentrysoftware.com</email>
+			<roles>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Elyes Cherfa (@CherfaElyes)</name>
+			<email>elyes@sentrysoftware.com</email>
+			<roles>
+				<role>maintainer</role>
 			</roles>
 		</developer>
 	</developers>
 
 	<properties>
-		<!-- Java 11 -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.release>11</maven.compiler.release>
+		<!-- Java 8 -->
+		<maven.compiler.source>8</maven.compiler.source>
 
 		<!-- UTF-8 -->
 		<project.build.encoding>UTF-8</project.build.encoding>
@@ -93,6 +112,22 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<version>5.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna-platform</artifactId>
+			<version>5.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>5.2.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -183,6 +218,9 @@
 			<!-- javadoc -->
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<doclint>all,-missing</doclint>
+				</configuration>
 				<executions>
 					<execution>
 							<id>attach-javadocs</id>

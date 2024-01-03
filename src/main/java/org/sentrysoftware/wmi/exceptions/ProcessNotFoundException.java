@@ -1,10 +1,10 @@
-package org.sentrysoftware.example;
+package org.sentrysoftware.wmi.exceptions;
 
 /*-
  * ╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲
- * MY PROJECT
+ * WMI Java Client
  * ჻჻჻჻჻჻
- * Copyright 2023 Sentry Software
+ * Copyright (C) 2023 - 2024 Sentry Software
  * ჻჻჻჻჻჻
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@ package org.sentrysoftware.example;
  * ╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱
  */
 
-/**
- * An Example class
- */
-public class Example {
+public class ProcessNotFoundException extends Exception {
 
-	/**
-	 * The main function
-	 */
-	public static void main() {
-		System.out.println("Hello Open-source World!");
+	private static final long serialVersionUID = 1L;
+
+	public ProcessNotFoundException(int pid) {
+		super("Could not find process with pid " + pid);
+	}
+
+	public ProcessNotFoundException() {
+		super("Could not find process");
 	}
 }

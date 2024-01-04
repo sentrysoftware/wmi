@@ -134,8 +134,7 @@ class WindowsTempShareTest {
 				Mockito.mockStatic(WindowsTempShare.class)) {
 			mockedWindowsTempShare.when(() -> WindowsTempShare.getClusterShare(
 					Mockito.eq(windowsRemoteExecutor),
-					Mockito.anyLong(),
-					Mockito.eq(NOW)))
+					Mockito.anyLong()))
 			.thenReturn(Optional.of(windowsTempShare));
 
 			mockedWindowsTempShare.when(() -> WindowsTempShare.getOrCreateShare(
@@ -174,8 +173,7 @@ class WindowsTempShareTest {
 				Mockito.mockStatic(WindowsTempShare.class)) {
 			mockedWindowsTempShare.when(() -> WindowsTempShare.getClusterShare(
 					Mockito.eq(windowsRemoteExecutor),
-					Mockito.anyLong(),
-					Mockito.eq(NOW)))
+					Mockito.anyLong()))
 			.thenReturn(Optional.empty());
 
 			mockedWindowsTempShare.when(WindowsTempShare::buildShareName).thenCallRealMethod();
@@ -215,8 +213,7 @@ class WindowsTempShareTest {
 				Mockito.mockStatic(WindowsTempShare.class)) {
 			mockedWindowsTempShare.when(() -> WindowsTempShare.getClusterShare(
 					Mockito.eq(windowsRemoteExecutor),
-					Mockito.anyLong(),
-					Mockito.eq(NOW)))
+					Mockito.anyLong()))
 			.thenReturn(Optional.empty());
 
 			mockedWindowsTempShare.when(WindowsTempShare::buildShareName).thenCallRealMethod();

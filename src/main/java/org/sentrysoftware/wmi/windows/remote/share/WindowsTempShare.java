@@ -100,8 +100,7 @@ public class WindowsTempShare {
 		// Try to get a clustered share
 		final Optional<WindowsTempShare> clusterShare = getClusterShare(
 				windowsRemoteExecutor,
-				TimeoutHelper.getRemainingTime(timeout, start, "No time left to check for cluster share"),
-				start);
+				TimeoutHelper.getRemainingTime(timeout, start, "No time left to check for cluster share"));
 
 		if (clusterShare.isPresent()) {
 			return clusterShare.get();
@@ -260,7 +259,6 @@ public class WindowsTempShare {
 	 * <p>
 	 * @param windowsRemoteExecutor WindowsRemoteExecutor instance.
 	 * @param timeout Timeout in milliseconds.
-	 * @param start start time in milliseconds.
 	 * <p>
 	 * @return An optional Map<String, Object> with 2 entries: "Name" and "Path"
 	 * <p>
@@ -269,8 +267,7 @@ public class WindowsTempShare {
 	 */
 	static Optional<WindowsTempShare> getClusterShare(
 			final WindowsRemoteExecutor windowsRemoteExecutor,
-			final long timeout,
-			final long start) throws TimeoutException, WindowsRemoteException {
+			final long timeout) throws TimeoutException, WindowsRemoteException {
 
 		try {
 			final Optional<WindowsTempShare> clusterShare = windowsRemoteExecutor.executeWql(

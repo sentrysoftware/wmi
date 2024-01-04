@@ -120,12 +120,11 @@ class WinTempShareTest {
 
 		final Path remotePath = Paths.get(tempDir.toAbsolutePath().toString(), "remoteDirectory");
 		final long timeout = 60 * 1000L;
-		final long start = System.currentTimeMillis();
 
 		try (final WmiWbemServices wmiWbemServices = WmiWbemServices.getInstance("root\\cimv2", null, null)) {
 			Assertions.assertFalse(Files.exists(remotePath));
 
-			WinTempShare.createRemoteDirectory(wmiWbemServices, remotePath.toString(), timeout, start);
+			WinTempShare.createRemoteDirectory(wmiWbemServices, remotePath.toString(), timeout);
 
 			Assertions.assertTrue(Files.exists(remotePath));
 		}

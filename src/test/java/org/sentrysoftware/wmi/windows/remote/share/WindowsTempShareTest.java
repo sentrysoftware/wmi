@@ -336,13 +336,13 @@ class WindowsTempShareTest {
 		// Check arguments
 		Assertions.assertThrows(
 				IllegalArgumentException.class,
-				() -> WindowsTempShare.createRemoteDirectory(null, "remotePath", timeout, NOW));
+				() -> WindowsTempShare.createRemoteDirectory(null, "remotePath", timeout));
 
 		Assertions.assertThrows(
 				IllegalArgumentException.class,
-				() -> WindowsTempShare.createRemoteDirectory(windowsRemoteExecutor, null, timeout, NOW));
+				() -> WindowsTempShare.createRemoteDirectory(windowsRemoteExecutor, null, timeout));
 
-		WindowsTempShare.createRemoteDirectory(windowsRemoteExecutor, "remotePath", timeout, NOW);
+		WindowsTempShare.createRemoteDirectory(windowsRemoteExecutor, "remotePath", timeout);
 	}
 
 	@Test

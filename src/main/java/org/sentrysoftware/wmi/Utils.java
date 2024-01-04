@@ -24,21 +24,15 @@ package org.sentrysoftware.wmi;
  * ╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱╲╱
  */
 
-import org.sentrysoftware.wmi.exceptions.BadMatsyaQueryException;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,93 +61,6 @@ public class Utils {
 	public static final String STATUS_ERROR = "ERROR";
 
 	/**
-	 * Build an Matsya error response from the specified message and exception
-	 * @param label A description of the problem
-	 * @param exception The associated exception (if any)
-	 * @return the response to be sent to the PSL
-	 */
-	public static StringBuilder buildErrorResponse(
-			final String label,
-			final Throwable exception
-	) {
-
-		final StringBuilder response = new StringBuilder(Utils.STATUS_ERROR);
-
-		// Add label if any
-		if (label != null) {
-			response
-					.append(Utils.NEW_LINE)
-					.append(label);
-		}
-
-		// Add exception if any
-		if (exception != null) {
-			response
-					.append(Utils.NEW_LINE)
-					.append(exception.getClass().getSimpleName());
-
-			String message = exception.getMessage();
-			if (message != null) {
-				response
-						.append(": ")
-						.append(message);
-			}
-
-			// Add cause if any
-			final Throwable cause = exception.getCause();
-			if (cause != null) {
-				response
-						.append(Utils.NEW_LINE)
-						.append(cause.getClass().getSimpleName());
-
-				String causeMessage = cause.getMessage();
-				if (causeMessage != null) {
-					response
-							.append(": ")
-							.append(causeMessage);
-				}
-			}
-
-		}
-
-		return response;
-	}
-
-
-	/**
-	 * Build an Matsya error response from the specified message
-	 * @param label A description of the problem
-	 * @return the response to be sent to the PSL
-	 */
-	public static StringBuilder buildErrorResponse(String label) {
-		return buildErrorResponse(label, null);
-	}
-
-
-	/**
-	 * Build an Matsya error response from the specified exception
-	 * @param exception The associated exception (if any)
-	 * @return the response to be sent to the PSL
-	 */
-	public static StringBuilder buildErrorResponse(Exception exception) {
-		// Special case for BadMatsyaQueryException, we just show its message
-		if (exception instanceof BadMatsyaQueryException) {
-			return buildErrorResponse(exception.getMessage());
-		}
-		return buildErrorResponse(null, exception);
-	}
-
-
-	/**
-	 * Build an Matsya error response with no details
-	 * @return the response to be sent to the PSL
-	 */
-	public static StringBuilder buildErrorResponse() {
-		return buildErrorResponse(null, null);
-	}
-
-
-	/**
 	 * Regex that matches with a CIM_DATETIME string format
 	 * <p>
 	 * See https://docs.microsoft.com/en-us/windows/win32/wmisdk/cim-datetime
@@ -171,49 +78,6 @@ public class Utils {
 	 */
 	public static final DateTimeFormatter WBEM_CIM_DATETIME_FORMATTER =
 			DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-
-	/**
-	 * Returns the proper Charset that can decode/encode the specified locale
-	 * @param locale The locale we're dealing with, as formatted in the LANG environment variable (e.g. zh_CN.utf8)
-	 * @param defaultCharset The default Charset to use if the specified locale doesn't match any supported Charset
-	 * @return The appropriate Charset instance
-	 */
-	public static Charset getCharsetFromLocale(final String locale, final Charset defaultCharset) {
-
-		// What charset will we be dealing with coming from and going to the PATROL Agent
-		Charset charset = defaultCharset;
-		if (locale != null && !locale.isEmpty()) {
-			final String[] localeElements = locale.split("\\.");
-			if (localeElements.length > 0) {
-				String charsetName = localeElements[localeElements.length - 1];
-				if (charsetName != null) {
-					charsetName = charsetName.trim();
-					if (!charsetName.isEmpty() && !"c".equalsIgnoreCase(charsetName)) {
-						if ("gb".equalsIgnoreCase(charsetName)) {
-							charsetName = "GBK";
-						}
-   						try {
-							charset = Charset.forName(charsetName);
-						} catch (IllegalCharsetNameException | UnsupportedCharsetException e) {
-							/* Unfortunately, there is nothing we can do here, as debug is not even set yet */
-						}
-					}
-				}
-			}
-	 	}
-
-		return charset;
-	}
-
-	/**
-	 * Returns the proper Charset that can decode/encode the specified locale, or UTF-8 if specified locale
-	 * cannot be converted to a Charset.
-	 * @param locale The locale we're dealing with, as formatted in the LANG environment variable (e.g. zh_CN.utf8)
-	 * @return The appropriate Charset instance
-	 */
-	public static Charset getCharsetFromLocale(final String locale) {
-		return getCharsetFromLocale(locale, StandardCharsets.UTF_8);
-	}
 
 	/**
 	 * Check if the required argument is not null.
@@ -235,7 +99,7 @@ public class Utils {
 	 * @param name
 	 * @throws IllegalArgumentException if the argument is null
 	 */
-	public static <T> void checkNonBlank(final String argument, final String name) {
+	public static void checkNonBlank(final String argument, final String name) {
 		if (isBlank(argument)) {
 			throw new IllegalArgumentException(name + " must not be null or empty.");
 		}
@@ -345,46 +209,6 @@ public class Utils {
 	}
 
 	/**
-	 * @param value The value to return
-	 * @return the given value or empty string if the value is null or empty
-	 */
-	public static String getValueOrEmpty(String value) {
-		return isBlank(value) ? EMPTY : value;
-	}
-
-	/**
-	 * Run the given {@link Callable} using the passed timeout in seconds.
-	 *
-	 * @param <T>
-	 * @param callable
-	 * @param timeout
-	 * @return {@link T} result returned by the callable
-	 *
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 * @throws TimeoutException
-	 */
-	public static <T> T execute(Callable<T> callable, long timeout)
-			throws InterruptedException, ExecutionException, TimeoutException {
-
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
-		Future<T> future = executorService.submit(callable);
-
-		try {
-			return future.get(timeout, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			throw e;
-		} catch (TimeoutException e) {
-			future.cancel(true);
-			throw e;
-		} finally {
-			executorService.shutdownNow();
-		}
-	}
-
-
-	/**
 	 * Read the content of the specified file. End-of-lines are normalized as <code>\n</code>.
 	 * Non-existent or non-readable files will simply return an empty string.
 	 *
@@ -417,35 +241,6 @@ public class Utils {
 	}
 
 	/**
-	 * @see #readText(Path, Charset)
-	 * @param filePath Path to the file
-	 * @param charset Charset of the file
-	 * @return The content of the file, as a String, or empty string if file doesn't exist
-	 */
-	public static String readText(final String filePath, final Charset charset) {
-		return readText(Paths.get(filePath), charset);
-	}
-
-	/**
-	 * @see #readText(Path, Charset)
-	 * @param filePath Path to the file
-	 * @return The content of the file, as a UTF-8 String, or empty string if file doesn't exist
-	 */
-	public static String readText(final Path filePath) {
-		return readText(filePath, StandardCharsets.UTF_8);
-	}
-
-	/**
-	 * @see #readText(Path, Charset)
-	 * @param filePath Path to the file
-	 * @return The content of the file, as a UTF-8 String, or empty string if file doesn't exist
-	 */
-	public static String readText(final String filePath) {
-		return readText(filePath, StandardCharsets.UTF_8);
-	}
-
-
-	/**
 	 * Wrapper for Thread.sleep(millis)
 	 * @param millis Time to sleep (in milliseconds)
 	 * @throws InterruptedException
@@ -454,41 +249,4 @@ public class Utils {
 		Thread.sleep(millis);
 	}
 
-	/**
-	 * <p>Get the password from:</p>
-	 * <ul>
-	 * <li>The CLI if the CLI password is not null nor empty</li>
-	 * <li>The console if the CLI password is null or empty, the username is not empty and the console is available</li>
-	 * <li>The password is null if the CLI password and username are null or empty or and no console available</li>
-	 * </ul>
-	 * @param username The username from the CLI
-	 * @param password The password from the CLI
-	 * @return The password used.
-	 */
-	public static char[] getPassword(final String username, final char[] password) {
-
-		if (password != null && password.length != 0) {
-			return password;
-		}
-
-		if (username == null || username.isEmpty()) {
-			return null;
-		}
-
-		final Console console = getConsole();
-
-		return console != null ? console.readPassword("Enter value for --password (Password): ") : null;
-	}
-
-	public static Console getConsole () {
-		return System.console();
-	}
-
-	static BufferedReader createBufferedReader(final InputStreamReader inputStreamReader) {
-		return new BufferedReader(inputStreamReader);
-	}
-
-	public static InputStream getStdin() {
-		return System.in;
-	}
 }

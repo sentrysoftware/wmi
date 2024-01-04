@@ -169,15 +169,13 @@ public class WindowsTempShare {
 	 * @param windowsRemoteExecutor WindowsRemoteExecutor instance. (mandatory)
 	 * @param remotePath The remote path to create
 	 * @param timeout Timeout in milliseconds
-	 * @param start start time in milliseconds.
 	 * @throws WindowsRemoteException For any problem encountered.
 	 * @throws TimeoutException To notify userName of timeout.
 	 */
 	public static void createRemoteDirectory(
 			final WindowsRemoteExecutor windowsRemoteExecutor,
 			final String remotePath,
-			final long timeout,
-			final long start) throws WindowsRemoteException, TimeoutException {
+			final long timeout) throws WindowsRemoteException, TimeoutException {
 
 		Utils.checkNonNull(windowsRemoteExecutor, "windowsRemoteExecutor");
 
@@ -291,7 +289,7 @@ public class WindowsTempShare {
 
 			if (clusterShare.isPresent()) {
 				// We create the subdirectory (if necessary)
-				createRemoteDirectory(windowsRemoteExecutor, clusterShare.get().getRemotePath(), timeout, start);
+				createRemoteDirectory(windowsRemoteExecutor, clusterShare.get().getRemotePath(), timeout);
 			}
 
 			return clusterShare;
@@ -366,8 +364,8 @@ public class WindowsTempShare {
 		createRemoteDirectory(
 				windowsRemoteExecutor,
 				remotePath,
-				TimeoutHelper.getRemainingTime(timeout, start, "No time left to create the temporary directory"),
-				start);
+				TimeoutHelper.getRemainingTime(timeout, start, "No time left to create the temporary directory")
+				);
 
 		// Create the share
 		shareRemoteDirectory.apply(windowsRemoteExecutor, remotePath, shareName, timeout);

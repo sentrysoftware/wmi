@@ -1,6 +1,7 @@
 # WMI Java Client
 
 The WMI Java Client is a library designed for interacting with the WMI services on Windows systems. The library facilitates the execution of WMI Query Language (WQL) queries making it easy to retrieve information about system.
+See **[Project Documentation](https://sentrysoftware.github.io/wmi)** and the [Javadoc](https://sentrysoftware.github.io/wmi/apidocs) for more information on how to use this library in your code.
 
 # How to run the WMI Client inside Java
 

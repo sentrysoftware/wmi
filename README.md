@@ -1,11 +1,11 @@
-# oss-maven-template
+# WMI Java Client
 
-![GitHub release (with filter)](https://img.shields.io/github/v/release/sentrysoftware/oss-maven-template)
-![Build](https://img.shields.io/github/actions/workflow/status/sentrysoftware/oss-maven-template/deploy.yml)
-![GitHub top language](https://img.shields.io/github/languages/top/sentrysoftware/oss-maven-template)
-![License](https://img.shields.io/github/license/sentrysoftware/oss-maven-template)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/sentrysoftware/wmi)
+![Build](https://img.shields.io/github/actions/workflow/status/sentrysoftware/wmi/deploy.yml)
+![GitHub top language](https://img.shields.io/github/languages/top/sentrysoftware/wmi)
+![License](https://img.shields.io/github/license/sentrysoftware/wmi)
 
-Repository template for all Sentry open-source Java projects, published on Maven Central.
+The WMI Java Client is a library that facilitates the execution of WMI Query Language (WQL) queries making it easy to retrieve information about system.
 
 ## Build instructions
 

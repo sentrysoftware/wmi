@@ -4,7 +4,7 @@
 	<groupId>org.sentrysoftware</groupId>
 	<artifactId>wmi</artifactId>
 	<name>WMI Java Client</name>
-	<version>1.0.01-SNAPSHOT</version>
+	<version>1.1.00-SNAPSHOT</version>
 	<description>WMI Client Library for Java</description>
 	<packaging>jar</packaging>
 
@@ -88,7 +88,7 @@
 
 		<!-- Reproducible Build -->
 		<!-- See https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
-		<project.build.outputTimestamp>2024-01-05T13:56:19Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2024-01-26T13:23:56Z</project.build.outputTimestamp>
 	</properties>
 
 	<dependencyManagement>

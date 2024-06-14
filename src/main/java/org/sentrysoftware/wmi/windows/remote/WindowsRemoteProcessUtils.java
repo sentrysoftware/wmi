@@ -57,7 +57,7 @@ public class WindowsRemoteProcessUtils {
 		final Map<String, Charset> map = new HashMap<>();
 		addToCharsetMap(map, "1250", "windows-1250");
 		addToCharsetMap(map, "1251", "windows-1251");
-		addToCharsetMap(map, "1252", "windows-1252");
+		map.put("1252", DEFAULT_CHARSET);
 		addToCharsetMap(map, "1253", "windows-1253");
 		addToCharsetMap(map, "1254", "windows-1254");
 		addToCharsetMap(map, "1255", "windows-1255");
@@ -67,8 +67,12 @@ public class WindowsRemoteProcessUtils {
 		addToCharsetMap(map, "874", "x-windows-874");
 		addToCharsetMap(map, "932", "Shift_JIS");
 		addToCharsetMap(map, "936", "GBK");
-		addToCharsetMap(map, "949", "x-windows-949");
-		addToCharsetMap(map, "950", "x-windows-950");
+		if (!addToCharsetMap(map, "949", "EUC-KR")) {
+			addToCharsetMap(map, "949", "x-windows-949");
+		}
+		if (!addToCharsetMap(map, "950", "Big5")) {
+			addToCharsetMap(map, "950", "x-windows-950");
+		}
 		addToCharsetMap(map, "951", "Big5-HKSCS");
 		map.put("28591", StandardCharsets.ISO_8859_1);
 		map.put("20127", StandardCharsets.US_ASCII);
@@ -82,14 +86,17 @@ public class WindowsRemoteProcessUtils {
 	/**
 	 * Adds a charset to the provided map if it is supported by the current JVM
 	 * 
-	 * @param map the map to which the charset will be added.
-	 * @param key the key with which the specified charset is to be associated
+	 * @param map         the map to which the charset will be added.
+	 * @param key         the key with which the specified charset is to be
+	 *                    associated
 	 * @param charsetName the name of the charset to be added.
 	 */
-	private static void addToCharsetMap(Map<String, Charset> map,String key, String charsetName) {
+	private static boolean addToCharsetMap(Map<String, Charset> map, String key, String charsetName) {
 		if (Charset.isSupported(charsetName)) {
 			map.put(key, Charset.forName(charsetName));
-        }
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -90,6 +90,7 @@ public class WindowsRemoteProcessUtils {
 	 * @param key         the key with which the specified charset is to be
 	 *                    associated
 	 * @param charsetName the name of the charset to be added.
+	 * @return true if the charset was supported and added to the map, false otherwise
 	 */
 	private static boolean addToCharsetMap(Map<String, Charset> map, String key, String charsetName) {
 		if (Charset.isSupported(charsetName)) {

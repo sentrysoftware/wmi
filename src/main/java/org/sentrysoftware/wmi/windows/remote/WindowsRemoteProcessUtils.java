@@ -79,9 +79,16 @@ public class WindowsRemoteProcessUtils {
 		CODESET_MAP = Collections.unmodifiableMap(map);
 	}
 		
+	/**
+	 * Adds a charset to the provided map if it is supported by the current JVM
+	 * 
+	 * @param map the map to which the charset will be added.
+	 * @param key the key with which the specified charset is to be associated
+	 * @param charsetName the name of the charset to be added.
+	 */
 	private static void addToCharsetMap(Map<String, Charset> map,String key, String charsetName) {
-        if (Charset.isSupported(charsetName)) {
-            map.put(key, Charset.forName(charsetName));
+		if (Charset.isSupported(charsetName)) {
+			map.put(key, Charset.forName(charsetName));
         }
 	}
 

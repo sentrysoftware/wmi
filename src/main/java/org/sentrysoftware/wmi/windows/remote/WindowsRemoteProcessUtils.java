@@ -55,21 +55,25 @@ public class WindowsRemoteProcessUtils {
 	private static final Map<String, Charset> CODESET_MAP;
 	static {
 		final Map<String, Charset> map = new HashMap<>();
-		map.put("1250", Charset.forName("windows-1250"));
-		map.put("1251", Charset.forName("windows-1251"));
+		addToCharsetMap(map, "1250", "windows-1250");
+		addToCharsetMap(map, "1251", "windows-1251");
 		map.put("1252", DEFAULT_CHARSET);
-		map.put("1253", Charset.forName("windows-1253"));
-		map.put("1254", Charset.forName("windows-1254"));
-		map.put("1255", Charset.forName("windows-1255"));
-		map.put("1256", Charset.forName("windows-1256"));
-		map.put("1257", Charset.forName("windows-1257"));
-		map.put("1258", Charset.forName("windows-1258"));
-		map.put("874", Charset.forName("x-windows-874"));
-		map.put("932", Charset.forName("Shift_JIS"));
-		map.put("936", Charset.forName("GBK"));
-		map.put("949", Charset.forName("EUC-KR"));
-		map.put("950", Charset.forName("Big5"));
-		map.put("951", Charset.forName("Big5-HKSCS"));
+		addToCharsetMap(map, "1253", "windows-1253");
+		addToCharsetMap(map, "1254", "windows-1254");
+		addToCharsetMap(map, "1255", "windows-1255");
+		addToCharsetMap(map, "1256", "windows-1256");
+		addToCharsetMap(map, "1257", "windows-1257");
+		addToCharsetMap(map, "1258", "windows-1258");
+		addToCharsetMap(map, "874", "x-windows-874");
+		addToCharsetMap(map, "932", "Shift_JIS");
+		addToCharsetMap(map, "936", "GBK");
+		if (!addToCharsetMap(map, "949", "EUC-KR")) {
+			addToCharsetMap(map, "949", "x-windows-949");
+		}
+		if (!addToCharsetMap(map, "950", "Big5")) {
+			addToCharsetMap(map, "950", "x-windows-950");
+		}
+		addToCharsetMap(map, "951", "Big5-HKSCS");
 		map.put("28591", StandardCharsets.ISO_8859_1);
 		map.put("20127", StandardCharsets.US_ASCII);
 		map.put("65001", StandardCharsets.UTF_8);
@@ -77,6 +81,23 @@ public class WindowsRemoteProcessUtils {
 		map.put("1201", StandardCharsets.UTF_16BE);
 
 		CODESET_MAP = Collections.unmodifiableMap(map);
+	}
+		
+	/**
+	 * Adds a charset to the provided map if it is supported by the current JVM
+	 * 
+	 * @param map         the map to which the charset will be added.
+	 * @param key         the key with which the specified charset is to be
+	 *                    associated
+	 * @param charsetName the name of the charset to be added.
+	 * @return true if the charset was supported and added to the map, false otherwise
+	 */
+	private static boolean addToCharsetMap(Map<String, Charset> map, String key, String charsetName) {
+		if (Charset.isSupported(charsetName)) {
+			map.put(key, Charset.forName(charsetName));
+			return true;
+		}
+		return false;
 	}
 
 	/**
